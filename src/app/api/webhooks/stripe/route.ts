@@ -16,6 +16,10 @@ export async function POST(req: Request) {
     return new NextResponse("Missing stripe-signature header", { status: 400 });
   }
 
+  if (!env.STRIPE_WEBHOOK_SECRET) {
+    return new NextResponse("Stripe webhook not configured", { status: 500 });
+  }
+
   let event;
   try {
     event = stripe.webhooks.constructEvent(body, sig, env.STRIPE_WEBHOOK_SECRET);
