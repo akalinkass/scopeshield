@@ -1,4 +1,4 @@
-import { auth } from "@clerk/nextjs/server";
+import { auth, currentUser } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { db } from "@/lib/db";
@@ -73,6 +73,15 @@ export async function POST(req: Request) {
       { status: 500 }
     );
   }
+
+  // ── Ensure User row exists (fallback if Clerk webhook hasn't fired) ───────
+  const clerkUser = await currentUser();
+  const email = clerkUser?.emailAddresses[0]?.emailAddress ?? "";
+  await db.user.upsert({
+    where: { id: userId },
+    create: { id: userId, email },
+    update: {},
+  });
 
   // ── Save to DB ────────────────────────────────────────────────────────────
   const proposal = await db.proposal.create({
