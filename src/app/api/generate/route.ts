@@ -69,7 +69,7 @@ export async function POST(req: Request) {
   } catch (e) {
     console.error(JSON.stringify({ event: "generate_error", userId, error: String(e) }));
     return NextResponse.json(
-      { error: "Document generation failed. Please try again." },
+      { error: `Document generation failed: ${String(e)}` },
       { status: 500 }
     );
   }
