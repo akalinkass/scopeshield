@@ -4,7 +4,7 @@ import { z } from "zod";
 import { db } from "@/lib/db";
 import { canGenerate } from "@/lib/entitlements";
 import { generateDocuments } from "@/lib/claude";
-import { PROJECT_TYPE_VALUES } from "@/lib/presets";
+import { PROJECT_TYPE_VALUES, type ProjectType } from "@/lib/presets";
 
 // Simple in-memory rate limiter: 1 req / 10s per user
 const rateLimitMap = new Map<string, number>();
@@ -19,7 +19,7 @@ function checkRateLimit(userId: string): boolean {
 
 const bodySchema = z.object({
   clientName: z.string().min(1).max(200),
-  projectType: z.enum(PROJECT_TYPE_VALUES as [string, ...string[]]),
+  projectType: z.enum(PROJECT_TYPE_VALUES as [ProjectType, ...ProjectType[]]),
   deliverables: z.array(z.string()).min(1),
   exclusions: z.array(z.string()),
   acceptanceCrit: z.array(z.string()),
