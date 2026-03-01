@@ -25,7 +25,7 @@ function markdownToHtml(md: string): string {
     .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
     .replace(/\*(.+?)\*/g, "<em>$1</em>")
     .replace(/^- (.+)$/gm, "<li>$1</li>")
-    .replace(/(<li>.*<\/li>\n?)+/gs, "<ul>$&</ul>")
+    .replace(/(<li>.*<\/li>\n?)+/gm, "<ul>$&</ul>")
     .replace(/^---$/gm, "<hr />")
     .replace(/\n\n/g, "</p><p>")
     .replace(/^(?!<[hul])(.+)$/gm, "<p>$1</p>");
