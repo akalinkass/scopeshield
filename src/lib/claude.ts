@@ -102,7 +102,7 @@ export async function generateDocuments(
   const start = Date.now();
 
   const message = await client.messages.create({
-    model: "claude-haiku-20240307",
+    model: "claude-3-haiku-20240307",
     max_tokens: 4096,
     system: SYSTEM_PROMPT,
     messages: [{ role: "user", content: buildUserPrompt(input) }],
@@ -114,7 +114,7 @@ export async function generateDocuments(
   console.log(
     JSON.stringify({
       event: "claude_generate",
-      model: "claude-haiku-20240307",
+      model: "claude-3-haiku-20240307",
       input_tokens: message.usage.input_tokens,
       output_tokens: message.usage.output_tokens,
       duration_ms: Date.now() - start,
