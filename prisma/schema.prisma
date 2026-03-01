@@ -1,0 +1,83 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── Enums ────────────────────────────────────────────────────────────────────
+
+enum ProjectType {
+  web_dev
+  design
+  consulting
+  writing
+  other
+}
+
+enum SubscriptionStatus {
+  active
+  past_due
+  canceled
+  trialing
+  incomplete
+  unpaid
+}
+
+// ─── Models ───────────────────────────────────────────────────────────────────
+
+// User.id = Clerk userId (no separate clerkId field)
+model User {
+  id               String        @id          // Clerk userId
+  email            String        @unique
+  stripeCustomerId String?       @unique
+  createdAt        DateTime      @default(now())
+  proposals        Proposal[]
+  subscription     Subscription?
+}
+
+model Proposal {
+  id             String      @id @default(cuid())
+  userId         String
+  user           User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  clientName     String
+  projectType    ProjectType
+  // Scope Builder — stored as JSON arrays (string[])
+  deliverables   Json
+  exclusions     Json
+  acceptanceCrit Json
+  assumptions    Json
+  timeline       String
+  budget         String
+  // AI-polished outputs (markdown)
+  proposalMd     String      @db.Text
+  sowMd          String      @db.Text
+  changeReqEmail String      @db.Text
+  createdAt      DateTime    @default(now())
+
+  @@index([userId, createdAt])
+}
+
+model Subscription {
+  id                String             @id @default(cuid())
+  userId            String             @unique
+  user              User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  stripeSubId       String             @unique
+  stripePriceId     String
+  status            SubscriptionStatus
+  currentPeriodEnd  DateTime
+  cancelAtPeriodEnd Boolean            @default(false)
+  updatedAt         DateTime           @updatedAt
+}
+
+// Stripe webhook idempotency — store processed event IDs
+model WebhookEvent {
+  id          String   @id @default(cuid())
+  stripeId    String   @unique   // Stripe event.id
+  type        String
+  processedAt DateTime @default(now())
+
+  @@index([stripeId])
+}
