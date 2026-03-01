@@ -11,7 +11,7 @@ const envSchema = z.object({
 
   // Stripe
   STRIPE_SECRET_KEY: z.string().startsWith("sk_"),
-  STRIPE_WEBHOOK_SECRET: z.string().startsWith("whsec_"),
+  STRIPE_WEBHOOK_SECRET: z.string().startsWith("whsec_").optional().or(z.literal("")),
   STRIPE_PRICE_PRO_MONTHLY: z.string().startsWith("price_"),
   STRIPE_PRICE_PRO_ANNUAL: z.string().startsWith("price_"),
 
