@@ -36,19 +36,14 @@ export async function GET(
   // ── Entitlement: watermark for Free, clean for Pro ────────────────────────
   const clean = await canDownloadClean(userId);
 
-  // ── Combine all three sections into one document ──────────────────────────
-  const combinedContent = [
-    proposal.proposalMd,
-    "\n\n---\n\n",
-    proposal.sowMd,
-    "\n\n---\n\n",
-    "## Change Request Email Template\n\n",
-    proposal.changeReqEmail,
-  ].join("");
-
-  const buffer = await generateDocx(combinedContent, {
+  const buffer = await generateDocx({
     watermark: !clean,
     title: `Proposal — ${proposal.clientName}`,
+    sections: [
+      { title: "Proposal", content: proposal.proposalMd },
+      { title: "Statement of Work", content: proposal.sowMd },
+      { title: "Change Request Email Template", content: proposal.changeReqEmail },
+    ],
   });
 
   const filename = `ScopeShield-${proposal.clientName.replace(/[^a-z0-9]/gi, "-")}-${proposal.id.slice(0, 8)}.docx`;

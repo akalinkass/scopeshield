@@ -28,8 +28,10 @@ IMPORTANT: All documents are for business communication purposes only. They are 
 Format rules:
 - Use Markdown with proper headings (## and ###)
 - Be concise and clear — no filler phrases
-- The SOW must include a "Scope Change Process" section with best-practice scope-protection language
-- The Change Request Email should be short (under 150 words) and professional`;
+- Use [PLACEHOLDER] for any value the freelancer should fill in (e.g. [Date], [Your Name], [Client Signature])
+- The Proposal must end with a signature block: spaces for freelancer name/date and client name/date
+- The SOW must include a "Scope Change Process" section with best-practice scope-protection language, and a "Payment Terms" section specifying deposit (50% upfront), milestone payments, and final payment on acceptance
+- The Change Request Email should be short (under 150 words), reference the original SOW, and state that work will pause until a change order is signed`;
 
 function buildUserPrompt(input: ScopeInput): string {
   const projectLabel = PROJECT_TYPE_LABELS[input.projectType];
@@ -103,7 +105,7 @@ export async function generateDocuments(
 
   const message = await client.messages.create({
     model: "claude-haiku-4-5-20251001",
-    max_tokens: 4096,
+    max_tokens: 8000,
     system: SYSTEM_PROMPT,
     messages: [{ role: "user", content: buildUserPrompt(input) }],
   });
