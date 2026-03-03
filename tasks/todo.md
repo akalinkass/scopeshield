@@ -11,7 +11,7 @@
 - [x] src/lib/db.ts (Prisma singleton)
 - [x] CLAUDE.md
 - [x] docs/decisions.md
-- [ ] Deploy skeleton to Vercel
+- [x] Deploy skeleton to Vercel
 
 ## Scope Builder
 - [x] src/lib/presets.ts
@@ -71,10 +71,10 @@
 - [x] docs/phase3-selling-assets.md — pricing rationale, copy audit, outreach, email sequences, KPIs
 
 ## Quality gates (manual)
-- [ ] npm install
+- [x] npm install
 - [ ] npm run dev
-- [ ] npm run typecheck
-- [ ] npm test
+- [x] npm run typecheck
+- [x] npm test
 - [ ] Sign up → User in DB
 - [ ] Generate proposal → DB row created
 - [ ] DOCX download works (watermarked)

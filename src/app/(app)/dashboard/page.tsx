@@ -49,27 +49,46 @@ export default async function DashboardPage({
 
       {/* Usage + billing */}
       <div className="grid md:grid-cols-2 gap-4 mb-8">
-        <div className="bg-white border border-gray-200 rounded-xl p-5">
-          <p className="text-sm text-gray-500 mb-1">Plan</p>
-          <p className="text-lg font-semibold text-gray-900">
-            {usage.isPro ? "Pro ✓" : "Free"}
-          </p>
-          {!usage.isPro && (
-            <p className="text-sm text-gray-500 mt-1">
-              {usage.monthlyCount} / {usage.limit} proposals used this month
+        {!usage.isPro && usage.monthlyCount >= 2 ? (
+          <div className="bg-amber-50 border border-amber-300 rounded-xl p-5">
+            <p className="text-sm font-semibold text-amber-900 mb-1">
+              {usage.monthlyCount >= usage.limit
+                ? "You've hit your free limit this month"
+                : `${usage.monthlyCount} of ${usage.limit} free proposals used`}
             </p>
-          )}
-          {!usage.isPro && (
-            <div className="mt-2 h-2 bg-gray-100 rounded-full overflow-hidden">
-              <div
-                className="h-2 bg-brand-500 rounded-full transition-all"
-                style={{
-                  width: `${Math.min((usage.monthlyCount / usage.limit) * 100, 100)}%`,
-                }}
-              />
-            </div>
-          )}
-        </div>
+            <p className="text-sm text-amber-800 leading-relaxed">
+              Upgrade to Pro ($14/mo) — less than the hourly rate you lost the last time a client said &ldquo;I thought this was included.&rdquo;
+            </p>
+            <Link
+              href="/pricing"
+              className="mt-3 inline-block text-sm font-semibold text-amber-900 underline"
+            >
+              Upgrade to Pro →
+            </Link>
+          </div>
+        ) : (
+          <div className="bg-white border border-gray-200 rounded-xl p-5">
+            <p className="text-sm text-gray-500 mb-1">Plan</p>
+            <p className="text-lg font-semibold text-gray-900">
+              {usage.isPro ? "Pro ✓" : "Free"}
+            </p>
+            {!usage.isPro && (
+              <p className="text-sm text-gray-500 mt-1">
+                {usage.monthlyCount} / {usage.limit} proposals used this month
+              </p>
+            )}
+            {!usage.isPro && (
+              <div className="mt-2 h-2 bg-gray-100 rounded-full overflow-hidden">
+                <div
+                  className="h-2 bg-brand-500 rounded-full transition-all"
+                  style={{
+                    width: `${Math.min((usage.monthlyCount / usage.limit) * 100, 100)}%`,
+                  }}
+                />
+              </div>
+            )}
+          </div>
+        )}
 
         <div className="bg-white border border-gray-200 rounded-xl p-5 flex flex-col gap-3">
           <BillingButtons isPro={usage.isPro} />

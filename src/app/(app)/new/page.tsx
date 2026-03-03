@@ -1,9 +1,65 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { type ProjectType, PRESETS, PROJECT_TYPE_LABELS, PROJECT_TYPE_VALUES } from "@/lib/presets";
 import ScopeBuilder from "@/components/scope-builder";
+
+const LOADING_STEPS = [
+  { label: "Analysing your scope...", delay: 0 },
+  { label: "Drafting your Proposal...", delay: 4000 },
+  { label: "Writing the Statement of Work...", delay: 10000 },
+  { label: "Adding scope protection language...", delay: 18000 },
+  { label: "Almost done...", delay: 24000 },
+];
+
+function GeneratingOverlay() {
+  const [step, setStep] = useState(0);
+
+  useEffect(() => {
+    const timers = LOADING_STEPS.slice(1).map((s, i) =>
+      setTimeout(() => setStep(i + 1), s.delay)
+    );
+    return () => timers.forEach(clearTimeout);
+  }, []);
+
+  return (
+    <div className="fixed inset-0 bg-white/90 backdrop-blur-sm z-50 flex items-center justify-center">
+      <div className="bg-white border border-gray-200 rounded-2xl p-10 shadow-lg max-w-sm w-full mx-4">
+        <div className="mb-6 text-center">
+          <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-brand-100 mb-4">
+            <svg className="animate-spin w-6 h-6 text-brand-600" viewBox="0 0 24 24" fill="none">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
+            </svg>
+          </div>
+          <p className="font-semibold text-gray-900">Generating your documents</p>
+          <p className="text-sm text-gray-500 mt-1">This takes about 20–30 seconds</p>
+        </div>
+        <ul className="space-y-3">
+          {LOADING_STEPS.map((s, i) => (
+            <li key={s.label} className="flex items-center gap-3 text-sm">
+              {i < step ? (
+                <span className="w-5 h-5 rounded-full bg-green-500 flex items-center justify-center flex-shrink-0">
+                  <svg className="w-3 h-3 text-white" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  </svg>
+                </span>
+              ) : i === step ? (
+                <span className="w-5 h-5 rounded-full border-2 border-brand-600 flex-shrink-0 animate-pulse" />
+              ) : (
+                <span className="w-5 h-5 rounded-full border-2 border-gray-200 flex-shrink-0" />
+              )}
+              <span className={i <= step ? "text-gray-900" : "text-gray-400"}>
+                {s.label}
+              </span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
+}
 
 type FormState = {
   clientName: string;
@@ -78,7 +134,7 @@ export default function NewProposalPage() {
 
       if (!res.ok) {
         if (res.status === 402) {
-          setError(data.error + " Click to upgrade.");
+          setError("You've used all 3 free proposals this month. Upgrade to Pro ($14/mo) — less than the hourly rate you lost the last time a client said 'I thought this was included.'");
           return;
         }
         setError(data.error ?? "Something went wrong. Please try again.");
@@ -97,6 +153,7 @@ export default function NewProposalPage() {
 
   return (
     <div className="max-w-3xl mx-auto">
+      {loading && <GeneratingOverlay />}
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-gray-900">New proposal</h1>
         <p className="text-gray-500 mt-1 text-sm">
@@ -230,17 +287,7 @@ export default function NewProposalPage() {
           disabled={loading || form.deliverables.length === 0}
           className="w-full py-4 bg-brand-600 text-white font-medium rounded-xl hover:bg-brand-700 transition-colors disabled:opacity-50 text-base"
         >
-          {loading ? (
-            <span className="flex items-center justify-center gap-2">
-              <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
-              </svg>
-              Generating your documents...
-            </span>
-          ) : (
-            "Generate Proposal + SOW →"
-          )}
+          Generate Proposal + SOW →
         </button>
       </form>
     </div>
