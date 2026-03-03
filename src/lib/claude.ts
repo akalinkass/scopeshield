@@ -28,10 +28,11 @@ IMPORTANT: All documents are for business communication purposes only. They are 
 Format rules:
 - Use Markdown with proper headings (## and ###)
 - Be concise and clear — no filler phrases
-- Use [PLACEHOLDER] for any value the freelancer should fill in (e.g. [Date], [Your Name], [Client Signature])
-- The Proposal must end with a signature block: spaces for freelancer name/date and client name/date
-- The SOW must include a "Scope Change Process" section with best-practice scope-protection language, and a "Payment Terms" section specifying deposit (50% upfront), milestone payments, and final payment on acceptance
-- The Change Request Email should be short (under 150 words), reference the original SOW, and state that work will pause until a change order is signed`;
+- Use descriptive named placeholders in [BRACKETS] for anything the freelancer must fill in. Examples: [YOUR FULL NAME], [YOUR BUSINESS NAME], [CLIENT LEGAL NAME], [PROJECT START DATE], [HOURLY RATE], [REVISION DEADLINE], [MILESTONE DESCRIPTION]. Never use a generic [PLACEHOLDER] — always name it specifically.
+- The Proposal must end with a signature block: lines for freelancer name/signature/date and client name/signature/date
+- The SOW Acceptance Criteria section must explicitly state: "Final payment is released upon written client confirmation that all acceptance criteria above are met."
+- The SOW Payment Terms must include: (1) 50% deposit on signing before work begins, (2) a milestone payment tied to a specific deliverable, (3) final 25% on written acceptance. Add: invoices unpaid after 14 days will pause all work until settled.
+- The Change Request Email must use these exact placeholders: [ORIGINAL SOW DATE], [CHANGE DESCRIPTION], [REASON OUT OF SCOPE], [ADDITIONAL COST], [ADDITIONAL TIME], [YOUR NAME]. Keep under 120 words.`;
 
 function buildUserPrompt(input: ScopeInput): string {
   const projectLabel = PROJECT_TYPE_LABELS[input.projectType];
@@ -74,11 +75,32 @@ ${input.assumptions.map((a) => `- ${a}`).join("\n")}
 
 ---
 
-For the Proposal: write a professional client-facing proposal introducing the project, summarizing deliverables and timeline, and ending with a clear call to action (sign and return).
+For the Proposal: write a professional client-facing proposal with these sections:
+1. Introduction — 1 paragraph welcoming the client and summarising the project opportunity
+2. Our Approach — 2–3 sentences describing how the freelancer will execute the project and why it will succeed
+3. Deliverables — what is included (from the list above)
+4. Timeline — key milestones from the input timeline
+5. Investment — the budget, payment structure (50% deposit, milestone, final on acceptance)
+6. Next Steps — a clear call to action: sign and return the proposal, then sign the SOW and submit the deposit to begin
+7. Signature block — lines for [YOUR FULL NAME] / [YOUR SIGNATURE] / [DATE] and [CLIENT LEGAL NAME] / [CLIENT SIGNATURE] / [DATE]
 
-For the SOW: write a detailed Statement of Work with sections for Deliverables, Exclusions, Acceptance Criteria, Assumptions, Timeline, Payment Terms, and a Scope Change Process section explaining how changes will be handled (written notice required, change order pricing, work paused until approved).
+For the SOW: write a detailed Statement of Work with these sections in this exact order:
+1. Overview — one paragraph project summary
+2. Deliverables — bulleted list verbatim from the input
+3. Exclusions — bulleted list verbatim from the input; note that any work not listed above is explicitly out of scope
+4. Revision Policy — state that [NUMBER] rounds of revisions are included; additional revisions are billed at [HOURLY RATE]/hr, billed in 30-minute increments, invoiced before work resumes
+5. Client Responsibilities — the client must provide: all content, copy, and brand assets by [CONTENT DEADLINE]; feedback on deliverables within [FEEDBACK TURNAROUND] business days of submission; access to required accounts/platforms by [PROJECT START DATE]. Delays caused by late client delivery may extend the project timeline at no additional cost to the client.
+6. Acceptance Criteria — bulleted list verbatim from the input; explicitly state that final payment is released upon written client confirmation that all criteria are met
+7. Assumptions — bulleted list verbatim from the input
+8. Timeline — project phases tied to deliverables, based on the input timeline
+9. Payment Terms — 50% deposit ([DEPOSIT AMOUNT]) due on signing before any work begins; [MILESTONE PAYMENT AMOUNT] due upon [MILESTONE DESCRIPTION]; final [FINAL PAYMENT AMOUNT] due upon written acceptance. Invoices unpaid after 14 days pause all work until settled.
+10. Project Commencement — work begins only after both parties have signed this SOW and the deposit has been received
+11. Project Abandonment — if the client is unresponsive for 30 consecutive days, the project is placed on hold; the deposit is non-refundable after 60 days of inactivity
+12. Scope Change Process — any request for work not listed in the Deliverables section requires a written change order signed by both parties; work on the change begins only after the change order is approved; the freelancer will provide a cost and timeline estimate within [ESTIMATE TURNAROUND] business days of receiving a change request
 
-For the Change Request Email: write a short professional email template the freelancer sends to a client when the client requests work outside the original scope.
+For the Change Request Email: write a short professional email using these exact placeholders:
+[ORIGINAL SOW DATE], [CHANGE DESCRIPTION], [REASON OUT OF SCOPE], [ADDITIONAL COST], [ADDITIONAL TIME], [YOUR NAME].
+State that work on this addition will not begin until a change order is signed. Keep it under 120 words and professional in tone — no apologies, just clear business communication.
 
 End each document with: *Not legal advice. Generated by ScopeShield · scopeshield.io*`;
 }
